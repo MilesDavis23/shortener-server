@@ -1,11 +1,25 @@
 {
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MilesDavis23/shortener-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MilesDavis23/shortener-server/issues"
+  },
+  "homepage": "https://github.com/MilesDavis23/shortener-server#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "mongoose": "^7.4.5",
     "shortid": "^2.2.16"
-  },
-  "scripts": {
-    "start": "node server.js"
   }
 }

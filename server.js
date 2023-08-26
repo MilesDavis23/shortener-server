@@ -1,7 +1,10 @@
-const { findLinkByShortened } = require('./dal/links')
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const { findLinkByShortened } = require('./dal/links')
+const userRoutes = require('./routes/user');
+
 const app = express();
 const PORT = 3001;
 const shortenerRoutes =  require('./routes/shortener');
@@ -10,7 +13,12 @@ const shortenerRoutes =  require('./routes/shortener');
 app.use(cors()); //use cors before we set up routes.
 
 app.use(express.json());
+
+app.use('/user', userRoutes);
+
+
 app.use('/shortener', shortenerRoutes);
+
 app.get('/:shortened', async (req, res) => {
     const link = await findLinkByShortened(req.params.shortened);
 

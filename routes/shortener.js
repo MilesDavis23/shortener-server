@@ -11,14 +11,4 @@ router.post('/shorten', async (req, res) => {
     res.json({ original, shortened });
 });
 
-router.get('/:shortened', async ( req, res ) => {
-        const link = await findLinkByShortened(req.params.shortened);
-
-        if (link) {
-            res.redirect(link.original);
-        } else {
-            res.status(404).send()
-        }
-})
-
 module.exports = router;

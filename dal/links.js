@@ -8,7 +8,12 @@ const LinkSchema = new mongoose.Schema({
 const Link = mongoose.model('Link', LinkSchema);
 
 const createLink = async (original, shortened) => {
-    return await Link.create({ original, shortened });
+    try {
+        return await Link.create({ original, shortened });
+    } catch (error) {
+        console.error('Error creating the link: ', error);
+        throw error;
+    }
 };
 
 const findLinkByShortened = async (shortened) => {

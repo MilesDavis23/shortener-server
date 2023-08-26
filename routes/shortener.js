@@ -7,7 +7,7 @@ const shortid = require('shortid');
 router.post('/shorten', async (req, res) => {
     const { original } = req.body;
     const shortened = shortid.generate();
-    await findLinkByShortened.create({ original, shortened });
+    await createLink(original, shortened);
     res.json({ original, shortened });
 });
 
@@ -20,3 +20,5 @@ router.get('/:shortened', async ( req, res ) => {
             res.status(404).send()
         }
 })
+
+module.exports = router;

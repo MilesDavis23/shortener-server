@@ -1,10 +1,12 @@
-
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { findLinkByShortened } = require('./dal/links')
 const userRoutes = require('./routes/user');
+const sessionCounterRoutes = require('./routes/sessionCounter');
 
+const sessionSecret = process.env.SESSION_SECRET;
 const app = express();
 const PORT = 3001;
 const shortenerRoutes =  require('./routes/shortener');
@@ -14,8 +16,22 @@ app.use(cors()); //use cors before we set up routes.
 
 app.use(express.json());
 
+/* the express session middleware: */
+app.use(session({
+    secret: sessionSecret, 
+    resave: false, 
+    saveUninitialized: false,
+    rolling: false,   
+    cookie: {
+        secure: false,
+        maxAge: 30000 //30 seconds in milliseconds
+    }, 
+}))
+
 app.use('/user', userRoutes);
 
+
+app.use('/counter', sessionCounterRoutes);
 
 app.use('/shortener', shortenerRoutes);
 
@@ -44,7 +60,7 @@ db.once('open', function() {
 const corsOption ={
     origin: 'http://localhost:3000',
 }
-app.use(cors(corsOption));
+
 
 
 app.get('/', (req, res) => {

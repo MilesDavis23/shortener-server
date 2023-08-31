@@ -1,9 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
 const User = require('../db/users/userModel');
 
+const sessionSecret = process.env.SESSION_SECRET;
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
@@ -28,15 +28,39 @@ router.post('/login', async (req, res) => {
         return res.status(401).send('Invalid credentials.')
     }
 
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
-        return res.sendStatus(401).send('Invalid credentials.');
+
+    const token = jwt.sign( { userId: user._id }, sessionSecret, {expiresIn: '5m'} );
+
+    if (isPasswordValid) {
+        req.session.counter = 1;
+        req.session.indicator = true;
+        res.json( {token} );
+
+        const indicator = req.session.indicator;
+        const counter = 30; //session . maxAge
+
+        function showCounter(){
+            if (!indicator || counter <= 0){
+                console.log('Session ended. ')
+                return
+            }
+
+            counter--
+
+            console.log(`Time left: ${counter}s`);
+
+            setTimeout(showCounter, 1000)
+        };
+
+        showCounter();
+    } else {
+        res.status(401).send('Invalid credentials. ');
     }
 
-    const token = jwt.sign( { userId: user._id }, 'your-secret-key', {expiresIn: '5m'} );
+});
 
-    res.json({ token });
-})
 
 module.exports = router;
